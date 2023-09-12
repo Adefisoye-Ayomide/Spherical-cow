@@ -1,12 +1,14 @@
+import numpy as np
+
 #We first set up the initial conditions and constants
 g = 9.8  
 m = 1000.0  #Mass of the cow (kg) 
 x = 0.0  #Initial x position (m)
-y = h = 100.0  #Initial y position we chose (m)
-vx = 10.0  #Initial x velocity (m/s)
-vy = 0.0  #Initial y velocity (m/s)
-constant_wind_resistance = 0.1  #we assumed this value for wind resistance constant
-dt = 0.01  #Time step size (s)
+y = h = 1000.0  #Initial y position we chose (m)
+vx = 1.0  #Initial x velocity (m/s)
+vy = 100.0  #Initial y velocity (m/s)
+constant_wind_resistance = 0.0  #we assumed this value for wind resistance constant
+dt = 0.001  #Time step size (s)
 
 #Function 1 which returns the total forces on the cow
 def total_force(x, y, vx, vy, constant):
@@ -52,6 +54,8 @@ def calculate_energy(x, y, vx, vy):
     return potential_energy, kinetic_energy, total_energy
 
 time = 0.0
+list = []
+
 
 while y > 0.0: #This condition is to stop the simulation when the cow hits the ground. i.e. when y <=0
     fx, fy = total_force(x, y, vx, vy, constant_wind_resistance)
@@ -59,6 +63,11 @@ while y > 0.0: #This condition is to stop the simulation when the cow hits the g
     potential_energy, kinetic_energy, total_energy = calculate_energy(x, y, vx, vy)
     time += dt
 
+    list.append((time,x,y))
+
+
+headers = ['Time', 'position_x', 'position_y']
+np.savetxt('hw1.txt', list, fmt = '%0.3f', delimiter = '\t', header = '\t'.join(headers))
 print("The simulation ended at time:", time)
 print("Final x position:", x)
 print("Final y position:", y)
