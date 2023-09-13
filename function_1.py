@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+import math
 
 #We first set up the initial conditions and constants
 g = 9.8  
@@ -55,16 +57,40 @@ def calculate_energy(x, y, vx, vy):
 
 time = 0.0
 list = []
-
+x_values = []
+y_values = []
+kinetic_energy_list = []
+potential_energy_list = []
+total_energy_list = []
 
 while y > 0.0: #This condition is to stop the simulation when the cow hits the ground. i.e. when y <=0
     fx, fy = total_force(x, y, vx, vy, constant_wind_resistance)
     x, y, vx, vy = update_position_velocity(x, y, vx, vy, fx, fy, dt)
     potential_energy, kinetic_energy, total_energy = calculate_energy(x, y, vx, vy)
     time += dt
-
     list.append((time,x,y))
+    x_values.append(x)
+    y_values.append(y)
+    kinetic_energy_list.append(kinetic_energy)
+    potential_energy_list.append(potential_energy)
+    total_energy_list.append(total_energy)
 
+plt.plot(x_values,y_values)
+plt.title("Position_x vs Position_y")
+plt.xlabel("Position_x (m)")
+plt.ylabel("Position_y (m)")
+plt.show()
+
+# plt.plot(potential_energy_list, label="Potential Energy")
+# plt.plot(kinetic_energy_list, label="Kinetic Energy")
+# plt.plot(total_energy_list, label="Total Energy")
+# plt.title("Energy vs Time")
+# plt.xlabel("Time (s)")
+# plt.ylabel("Energy (Joules)")
+# plt.legend()
+# plt.show()
+
+# plt.tight_layout()
 
 headers = ['Time', 'position_x', 'position_y']
 np.savetxt('hw1.txt', list, fmt = '%0.3f', delimiter = '\t', header = '\t'.join(headers))
