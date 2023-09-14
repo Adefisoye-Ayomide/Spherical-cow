@@ -1,18 +1,20 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
 # Constants
 g = 9.8  # Gravitational acceleration (m/s^2)
-rho_air = 1.225  # Air density (kg/m^3)
 
 # Initial conditions
 m = 1000.0  # Mass of the cow (kg)
 r = 1.0  # Radius of the cow (m)
 x = 0.0  # Initial x position (m)
-y = 100.0  # Initial y position (m)
-vx = 10.0  # Initial x velocity (m/s)
-vy = 0.0  # Initial y velocity (m/s)
-constant_wind_resistance = 0.1  # Selectable constant for wind resistance
+y = 1000.0  # Initial y position (m)
+vx = 1.0  # Initial x velocity (m/s)
+vy = 100.0  # Initial y velocity (m/s)
+constant_wind_resistance = 0.0  # Selectable constant for wind resistance
 
 # Time settings
-dt = 0.01  # Time step size (s)
+dt = 0.001  # Time step size (s)
 
 # Functions
 def total_force(x, y, vx, vy, constant):
@@ -22,9 +24,9 @@ def total_force(x, y, vx, vy, constant):
     
     # Calculate wind resistance force
     v = (vx**2 + vy**2)**0.5
-    wind_resistance = -constant * v**2 * rho_air * 3.141592653589793 * r**2
-    fx += wind_resistance * vx / v
-    fy += wind_resistance * vy / v
+    wind_resistance = -constant * v**2 
+    fx += wind_resistance 
+    fy += wind_resistance
     
     return fx, fy
 
@@ -57,13 +59,18 @@ def calculate_energy(x, y, vx, vy):
 
 # Simulation
 time = 0.0
-
+list = []
+#list[0] = (0,0,1000)
 while y > 0.0:
     fx, fy = total_force(x, y, vx, vy, constant_wind_resistance)
     x, y, vx, vy = update_position_velocity(x, y, vx, vy, fx, fy, dt)
+    list.append((dt, x, y))
     potential_energy, kinetic_energy, total_energy = calculate_energy(x, y, vx, vy)
     time += dt
 
+#print(list)
+headers = ['Time', 'position_x', 'position_y']
+np.savetxt("lst.txt", list, delimiter='\t', fmt='%0.3f', header = '\t'.join(headers))
 print("Simulation ended at time:", time)
 print("Final x position:", x)
 print("Final y position:", y)
